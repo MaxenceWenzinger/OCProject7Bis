@@ -5,6 +5,7 @@ description = "Projet 7 du cursus AI Engineer d'OpenClassrooms. Projet centré s
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "bs4>=0.0.2",
     "pandas>=3.0.6",
     "requests>=2.34.2",
 ]

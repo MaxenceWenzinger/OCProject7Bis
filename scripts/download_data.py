@@ -16,6 +16,7 @@ if __name__ == "__main__":
     date_end = datetime.date(2028, 1, 1)
     all_df = []
     filepath = os.path.join("data", "raw", "evenements-publics-openagenda.csv")
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     if os.path.exists(filepath):
         os.remove(filepath)
 
