@@ -5,7 +5,10 @@ description = "Projet 7 du cursus AI Engineer d'OpenClassrooms. Projet centré s
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.20.0",
     "bs4>=0.0.2",
     "pandas>=3.0.6",
+    "pgvector>=0.5.0",
     "requests>=2.34.2",
+    "sqlalchemy>=2.1.3",
 ]

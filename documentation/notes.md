@@ -15,3 +15,19 @@
 
 "attendancemode" peut être simplifié en 1: sur place, 2: en ligne, 3: mixte, lisible directement par l'"id" contenu dans attendancemode par défaut.
     on choisit de mettre 1 par défaut si c'est null ou mal formé
+
+Après relecture de l'énoncé, filtrage sur environ 1 an avant à 1 an après, du coup:
+263628 entrées de base
+250676 en france
+250238 description non null
+250238 title non null
+244922 sans doublons
+244922 après check des timings
+
+# Stockage en bdd
+
+Installer pgvector pour PostgreSQL
+https://github.com/pgvector/pgvector#installation-notes---windows
+
+Compatibilité python
+https://github.com/pgvector/pgvector-python

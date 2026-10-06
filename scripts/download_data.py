@@ -11,14 +11,11 @@ import requests
 if __name__ == "__main__":
     url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/exports/csv?quote_all=true"
     not_first_iteration = True
-    date_start = datetime.date(2016, 1, 1)
+    date_start = datetime.date(2025, 9, 1)
     date_chunk_end = date_start + datetime.timedelta(days=90)
-    date_end = datetime.date(2028, 1, 1)
+    date_end = datetime.date(2027, 9, 1)
     all_df = []
     filepath = os.path.join("data", "raw", "evenements-publics-openagenda.csv")
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    if os.path.exists(filepath):
-        os.remove(filepath)
 
     while date_start < date_end:
         params = {"where": f'firstdate_begin >= "{date_start.isoformat()}" AND firstdate_begin < "{date_chunk_end.isoformat()}"'}
@@ -35,6 +32,7 @@ if __name__ == "__main__":
         date_chunk_end = date_start + datetime.timedelta(days=90)
 
     concatenated_df = pandas.concat(all_df, ignore_index=True)
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, "w", encoding="utf-8") as f:
         concatenated_df.to_csv(f, index=False)
 
