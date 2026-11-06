@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import BigInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.base import Base

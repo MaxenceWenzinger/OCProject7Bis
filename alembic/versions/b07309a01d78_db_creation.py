@@ -55,7 +55,8 @@ def upgrade() -> None:
     op.create_table('vectors',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('event_uid', sa.Integer(), nullable=False),
-    sa.Column('vector', pgvector.sqlalchemy.vector.VECTOR(dim=1536), nullable=False),
+    sa.Column('vector', pgvector.sqlalchemy.VECTOR(dim=1024), nullable=False),
+    sa.Column('sparse', pgvector.sqlalchemy.SPARSEVEC(dim=250002), nullable=False),
     sa.ForeignKeyConstraint(['event_uid'], ['events.uid'], ),
     sa.PrimaryKeyConstraint('id')
     )
