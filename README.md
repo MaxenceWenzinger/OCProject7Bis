@@ -1,3 +1,5 @@
+Rapport technique (en français) : [documentation/rapport_technique.md](documentation/rapport_technique.md)
+
 ## Dataset download
 '''
 uv run -m scripts.download_data
