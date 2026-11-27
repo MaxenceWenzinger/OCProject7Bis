@@ -1,4 +1,3 @@
-from FlagEmbedding import BGEM3FlagModel
 from pgvector import SparseVector
 
 from database import Session
@@ -37,11 +36,19 @@ def build_content(event):
     result.append(content[start:].strip())
     return result
 
-if __name__ == "__main__":
+def vectorize(model, reset=False):
+    """Embed the events and store their vectors.
+
+    The run is resumable: it starts again from the last vectorized event (re-embedding it,
+    in case it was interrupted) and embeds all the events after it.
+    reset=True deletes all the vectors first, to rebuild everything from scratch.
+    """
     BATCH_SIZE = 16
     EVENTS_PER_RUN = 1000
+    if reset:
+        with Session.begin() as session:
+            session.query(Vector).delete()
     not_finished = True
-    model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=False, devices="cpu")
     while not_finished:
         with Session.begin() as session:
             # We need to delete the last vector in case the last run was interrupted, to avoid having a partial embedding for an event
@@ -76,3 +83,11 @@ if __name__ == "__main__":
                     sparse=SparseVector({int(k): float(v) for k, v in sparse[i].items()}, 250002)
                 )
                 session.add(vector_entry)
+
+
+if __name__ == "__main__":
+    import sys
+
+    from FlagEmbedding import BGEM3FlagModel
+    model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=False, devices="cpu")
+    vectorize(model, reset="--reset" in sys.argv[1:])

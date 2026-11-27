@@ -20,6 +20,12 @@ uv run alembic upgrade head
 uv run -m scripts.populate_db
 '''
 
+## Rebuilding the vectors
+'''
+uv run -m scripts.vectorize           # vectorize the events not vectorized yet (resumes an interrupted run)
+uv run -m scripts.vectorize --reset   # delete all the vectors and rebuild them from scratch
+'''
+
 ## Asking a question
 Add your Anthropic API key to the .env (`ANTHROPIC_API_KEY=...`). The model can be changed with `LLM_MODEL` (default: `claude-haiku-5-5`).
 '''
@@ -27,8 +33,18 @@ uv run -m api.rag "Un concert de jazz à Lyon ce week-end"
 '''
 The pipeline asks the LLM for the period the user is interested in, retrieves the n most relevant events with at least one date in that period, and has the LLM write the answer from them.
 
+## REST API
+'''
+uv run uvicorn api.app:app
+'''
+Interactive documentation (Swagger UI): http://127.0.0.1:8000/docs
+
+- `POST /ask` with `{"question": "Un concert de jazz à Lyon ce week-end"}` returns the answer, the period understood from the question and the candidate events given to the LLM. Empty or invalid questions get a 422.
+- `POST /rebuild` (optional body `{"reset": true}`) starts the vectorization in the background and returns 202 right away (409 if one is already running). `GET /rebuild` gives the status of the last rebuild. If `ADMIN_TOKEN` is set in the .env, `POST /rebuild` requires the header `X-Admin-Token: <token>`.
+- `GET /health` returns `{"status": "ok"}`.
+
 ## Tests
-Unit tests (no API call):
+Unit tests and API functional tests (tests/api_test.py, with the model, database and LLM faked):
 '''
 uv run pytest
 '''

@@ -7,5 +7,7 @@ class Settings(BaseSettings):
     anthropic_api_key: str | None = None
     llm_model: str = "claude-haiku-5-5"
     judge_model: str = "claude-haiku-5-5"
+    # When set, POST /rebuild requires the header "X-Admin-Token: <admin_token>"
+    admin_token: str | None = None
 
 settings = Settings()

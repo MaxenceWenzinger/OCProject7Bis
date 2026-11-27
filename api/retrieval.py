@@ -63,7 +63,7 @@ def retrieve(query, model, dense_weight=1.0, sparse_weight=1.0, top_k=30, interv
     return [(row.event_uid, row.dense_score, row.sparse_score, row.score) for row in rows]
 
 if __name__ == "__main__":
-    from scripts.vectorize import BGEM3FlagModel
+    from FlagEmbedding import BGEM3FlagModel
     model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=False, devices="cpu")
     query = "Concert de musique classique à Paris"
     today = datetime.date.today()
