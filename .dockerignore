@@ -1,0 +1,10 @@
+# Only what the API needs goes in the build context (see the COPY lines of the Dockerfile)
+.git
+.venv
+.env*
+**/__pycache__
+data
+documentation
+tests
+alembic
+temp

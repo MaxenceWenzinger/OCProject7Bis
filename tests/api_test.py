@@ -95,7 +95,7 @@ def test_ask_database_error_returns_503(client, monkeypatch):
 
 def test_rebuild_runs_vectorize(client, monkeypatch):
     calls = []
-    monkeypatch.setattr(app_module, "run_vectorize", lambda model, reset: calls.append((model, reset)))
+    monkeypatch.setattr(app_module, "vectorize", lambda model, reset: calls.append((model, reset)))
 
     response = client.post("/rebuild")
     assert response.status_code == 202
@@ -113,7 +113,7 @@ def test_rebuild_reports_errors(client, monkeypatch):
     def fail(model, reset):
         raise RuntimeError("boom")
 
-    monkeypatch.setattr(app_module, "run_vectorize", fail)
+    monkeypatch.setattr(app_module, "vectorize", fail)
     assert client.post("/rebuild").status_code == 202
     status = client.get("/rebuild").json()
     assert status["running"] is False
@@ -128,7 +128,7 @@ def test_rebuild_refuses_concurrent_runs(client):
 
 
 def test_rebuild_requires_token_when_configured(client, monkeypatch):
-    monkeypatch.setattr(app_module, "run_vectorize", lambda model, reset: None)
+    monkeypatch.setattr(app_module, "vectorize", lambda model, reset: None)
     monkeypatch.setattr(settings, "admin_token", "secret")
     assert client.post("/rebuild").status_code == 401
     assert client.post("/rebuild", headers={"X-Admin-Token": "wrong"}).status_code == 401

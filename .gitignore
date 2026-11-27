@@ -17,4 +17,5 @@ tests/reports/**/*.md
 !tests/data/*.json
 
 .env
+.env.docker
 temp/

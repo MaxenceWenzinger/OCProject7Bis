@@ -43,6 +43,17 @@ Interactive documentation (Swagger UI): http://127.0.0.1:8000/docs
 - `POST /rebuild` (optional body `{"reset": true}`) starts the vectorization in the background and returns 202 right away (409 if one is already running). `GET /rebuild` gives the status of the last rebuild. If `ADMIN_TOKEN` is set in the .env, `POST /rebuild` requires the header `X-Admin-Token: <token>`.
 - `GET /health` returns `{"status": "ok"}`.
 
+## Docker
+The image is self-contained: the API, its dependencies (CPU-only PyTorch) and the bge-m3 model, downloaded during the build (about 2.3 GB, so the first build needs an internet connection and takes a while; later builds reuse it). The database is not in the image: it stays on the host (or any other server).
+
+Inside the container, `localhost` is the container itself, so copy your .env to `.env.docker` (ignored by git and by the image) and replace `@localhost:` by `@host.docker.internal:` in `DATABASE_URL`. Postgres must listen on that interface (`listen_addresses` in postgresql.conf); with Docker Desktop on Windows, the default `pg_hba.conf` (localhost only) is enough.
+
+'''
+docker build -t puls-events-rag .
+docker run --rm -p 8000:8000 --env-file .env.docker puls-events-rag
+'''
+Loading bge-m3 takes a few seconds; the API is ready when http://127.0.0.1:8000/health answers, then go to http://127.0.0.1:8000/docs.
+
 ## Tests
 Unit tests and API functional tests (tests/api_test.py, with the model, database and LLM faked):
 '''
