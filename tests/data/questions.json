@@ -1,0 +1,116 @@
+{
+  "today": "2026-11-20",
+  "comment": "today is a Friday. expected_periods use the same fields as api.dates.PeriodSchema (weekdays: 1 = Monday ... 7 = Sunday, [] = every day; times null = whole day). Periods are compared after expansion into intervals, so equivalent descriptions match. check_until (optional) limits the comparison to the days up to that date, for open-ended windows whose exact end is arbitrary. expected_uids: uids of events the retrieval (filtered with expected_periods) must return; questions with an empty list are skipped by test_retrieval.",
+  "questions": [
+    {
+      "id": "no_date",
+      "query": "Un concert de jazz à Bordeaux",
+      "expected_periods": [{"start_date": "2026-11-20", "end_date": "2026-12-20", "weekdays": [], "start_time": null, "end_time": null}],
+      "check_until": "2026-12-15",
+      "expected_uids": [63950680, 97173163, 55702233]
+    },
+    {
+      "id": "weekend",
+      "query": "Que faire à Nantes ce week-end ?",
+      "expected_periods": [{"start_date": "2026-11-21", "end_date": "2026-11-22", "weekdays": [], "start_time": null, "end_time": null}],
+      "expected_uids": []
+    },
+    {
+      "id": "tonight",
+      "query": "Une pièce de théâtre à Paris ce soir",
+      "expected_periods": [{"start_date": "2026-11-20", "end_date": "2026-11-20", "weekdays": [], "start_time": "18:00", "end_time": "23:59"}],
+      "expected_uids": [68443544, 77342248, 2205304]
+    },
+    {
+      "id": "weekday_afternoon",
+      "query": "Un atelier pour enfants à Rennes mercredi après-midi",
+      "expected_periods": [{"start_date": "2026-11-25", "end_date": "2026-11-25", "weekdays": [], "start_time": "12:00", "end_time": "18:00"}],
+      "expected_uids": [6492995]
+    },
+    {
+      "id": "next_week",
+      "query": "Des expositions à Toulouse la semaine prochaine",
+      "expected_periods": [{"start_date": "2026-11-23", "end_date": "2026-11-29", "weekdays": [], "start_time": null, "end_time": null}],
+      "expected_uids": [63266051, 19460053, 84855746]
+    },
+    {
+      "id": "explicit_date",
+      "query": "Y a-t-il un marché de Noël à Bordeaux le 12 décembre ?",
+      "expected_periods": [{"start_date": "2026-12-12", "end_date": "2026-12-12", "weekdays": [], "start_time": null, "end_time": null}],
+      "expected_uids": [20724859]
+    },
+    {
+      "id": "tomorrow_morning",
+      "query": "Une sortie culturelle à Rouen demain matin",
+      "expected_periods": [{"start_date": "2026-11-21", "end_date": "2026-11-21", "weekdays": [], "start_time": "06:00", "end_time": "12:00"}],
+      "expected_uids": [87579091, 58908857, 13238855]
+    },
+    {
+      "id": "every_saturday",
+      "query": "Une visite guidée à Roubaix, je suis libre tous les samedis",
+      "expected_periods": [{"start_date": "2026-11-20", "end_date": "2027-02-18", "weekdays": [6], "start_time": null, "end_time": null}],
+      "check_until": "2027-01-15",
+      "expected_uids": [57012616, 69353482, 82634748]
+    },
+    {
+      "id": "several_days",
+      "query": "Une opération de don du sang à Nantes ce dimanche ou mardi prochain",
+      "expected_periods": [{"start_date": "2026-11-22", "end_date": "2026-11-24", "weekdays": [2, 7], "start_time": null, "end_time": null}],
+      "expected_uids": [86182305]
+    },
+    {
+      "id": "two_slots",
+      "query": "Un concert à Nantes samedi matin ou mardi soir",
+      "expected_periods": [
+		    {"start_date": "2026-11-21", "end_date": "2026-11-21", "weekdays": [], "start_time": "06:00", "end_time": "12:00"},
+        {"start_date": "2026-11-24", "end_date": "2026-11-24", "weekdays": [], "start_time": "18:00", "end_time": "23:59"}
+      ],
+      "expected_uids": [14652899, 12265818, 44993959]
+    },
+    {
+      "id": "month",
+      "query": "Un opéra à Meudon en janvier",
+      "expected_periods": [{"start_date": "2027-01-01", "end_date": "2027-01-31", "weekdays": [], "start_time": null, "end_time": null}],
+      "expected_uids": [77658746]
+    },
+    {
+      "id": "after_hour",
+      "query": "Que faire à Toulouse après 20h ce samedi ?",
+      "expected_periods": [{"start_date": "2026-11-21", "end_date": "2026-11-21", "weekdays": [], "start_time": "20:00", "end_time": null}],
+      "expected_uids": [96963589, 62755831, 13054643]
+    },
+    {
+      "id": "past_month",
+      "query": "Quels concerts y avait-il à Lille le mois dernier ?",
+      "expected_periods": [{"start_date": "2026-10-01", "end_date": "2026-10-31", "weekdays": [], "start_time": null, "end_time": null}],
+      "expected_uids": []
+    },
+    {
+      "id": "rare_type",
+      "query": "Une séance de yoga ou de méditation à Nantes",
+      "expected_periods": [{"start_date": "2026-11-20", "end_date": "2026-12-20", "weekdays": [], "start_time": null, "end_time": null}],
+      "check_until": "2026-12-15",
+      "expected_uids": [34996389, 3376726]
+    },
+    {
+      "id": "christmas_day",
+      "query": "Une activité en famille à Toulouse le jour de Noël",
+      "expected_periods": [{"start_date": "2026-12-25", "end_date": "2026-12-25", "weekdays": [], "start_time": null, "end_time": null}],
+      "expected_uids": [37547997, 35580350, 84855746]
+    },
+    {
+      "id": "no_answer_tonight",
+      "query": "Un tournoi de curling sous-marin à Draguignan ce soir",
+      "expected_periods": [{"start_date": "2026-11-20", "end_date": "2026-11-20", "weekdays": [], "start_time": "18:00", "end_time": "23:59"}],
+      "no_answer_expected": true,
+      "expected_uids": []
+    },
+    {
+      "id": "no_answer_date",
+      "query": "Une démonstration de forge médiévale à Alès le 5 décembre",
+      "expected_periods": [{"start_date": "2026-12-05", "end_date": "2026-12-05", "weekdays": [], "start_time": null, "end_time": null}],
+      "no_answer_expected": true,
+      "expected_uids": []
+    }
+  ]
+}

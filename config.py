@@ -6,5 +6,6 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://user:password@localhost:5432/dbname"
     anthropic_api_key: str | None = None
     llm_model: str = "claude-haiku-5-5"
+    judge_model: str = "claude-haiku-5-5"
 
 settings = Settings()

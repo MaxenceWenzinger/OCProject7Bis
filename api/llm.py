@@ -75,16 +75,16 @@ ANSWER_SYSTEM = """You are an assistant that recommends public cultural events i
 You receive a user request and a list of candidate events retrieved from a database, already filtered on the period the user is interested in. Answer the user's request using only these events.
 
 - Answer in the language of the user's request (usually French).
-- Recommend the events that actually match the request; ignore the ones that don't. Not every candidate has to be mentioned.
+- Recommend the events that actually match the request (place, type of event, period). Not every candidate has to be mentioned, and don't mention the candidates you discarded.
 - For each recommended event, give its title, when it takes place, where, and a short description of why it fits. Include its link when there is one.
 - Never invent events, dates, places or details that are not in the provided data.
-- If no candidate matches the request, say so plainly and, if relevant, suggest how the user could rephrase or widen their search (other dates, nearby places...)."""
+- If no candidate matches the request, say so plainly first. Then you may suggest up to 3 close alternatives from the candidates (for example the requested type of event in a nearby town, or a similar type of event in the requested place), in a separate part of the answer, clearly presented as not matching the request and saying what differs. Don't suggest alternatives that are far from the request. You may also suggest how the user could widen their search (other dates, nearby places...)."""
 
 MAX_DESCRIPTION_CHARS = 1500
 MAX_TIMINGS_SHOWN = 5
 
 
-def _format_event(index, event, timings):
+def format_event(index, event, timings):
     place = ", ".join(p for p in [event.location_name, event.location_address, event.location_city,
                                   event.location_department, event.location_region] if p)
     description = event.description_fr or ""
@@ -120,7 +120,7 @@ def generate_answer(query, events_with_timings, periods, today=None):
     """events_with_timings: list of (Event, [Timing]) ordered by relevance. periods: list of api.dates.Period."""
     today = today or datetime.date.today()
     if events_with_timings:
-        events_text = "\n\n".join(_format_event(i + 1, e, t) for i, (e, t) in enumerate(events_with_timings))
+        events_text = "\n\n".join(format_event(i + 1, e, t) for i, (e, t) in enumerate(events_with_timings))
     else:
         return "Aucun événement correspondant à votre demande n'a été trouvé dans la période indiquée."
 

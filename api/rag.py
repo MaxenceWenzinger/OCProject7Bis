@@ -1,3 +1,4 @@
+import dataclasses
 import datetime
 import sys
 
@@ -32,13 +33,21 @@ def load_events(event_uids, intervals):
     return result
 
 
+@dataclasses.dataclass
+class RagResult:
+    answer: str
+    periods: list  # api.dates.Period
+    results: list  # (event_uid, dense_score, sparse_score, score), by relevance
+    events: list   # (Event, [Timing]) given to the LLM, by relevance
+
+
 def answer(query, embedding_model, top_k=30, today=None):
     today = today or datetime.date.today()
     periods = extract_periods(query, today=today)
     intervals = to_intervals(periods)
     results = retrieve(query, embedding_model, top_k=top_k, intervals=intervals)
     events = load_events([uid for uid, *_ in results], intervals)
-    return generate_answer(query, events, periods, today=today), periods, results
+    return RagResult(generate_answer(query, events, periods, today=today), periods, results, events)
 
 
 if __name__ == "__main__":
@@ -46,8 +55,8 @@ if __name__ == "__main__":
 
     query = " ".join(sys.argv[1:]) or "Un concert de musique classique à Paris"
     model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=False, devices="cpu")
-    response, periods, results = answer(query, model)
+    result = answer(query, model)
     print(f"Query: {query}")
-    print(f"Periods: {describe_periods(periods)}")
-    print(f"Retrieved events: {[uid for uid, *_ in results]}\n")
-    print(response)
+    print(f"Periods: {describe_periods(result.periods)}")
+    print(f"Retrieved events: {[uid for uid, *_ in result.results]}\n")
+    print(result.answer)
